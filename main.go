@@ -44,3 +44,6 @@ func main() {
         currentLineContents += parts[len(parts) - 1]
     }
 }
+
+func getLinesChannel(f io.ReadCloser) <-chan string {
+}
