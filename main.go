@@ -28,7 +28,7 @@ func main() {
     fmt.Printf("Reading data from %s\n", conn)
     fmt.Println("=====================================")
 
-    linesChan := getLinesChannel(connection)
+    linesChan := getLinesChannel(conn)
 
     for line := range linesChan {
         fmt.Printf("read: %s\n", line)
