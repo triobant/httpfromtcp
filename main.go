@@ -19,19 +19,21 @@ func main() {
     defer listener.Close()
 
     fmt.Println("Listening TCP traffic on", port)
-    conn, err := listener.Accept()
-    if err != nil {
-        log.Fatalf("failed to accept connection: %s\n", err)
-        continue
-    }
+    for {
+        conn, err := listener.Accept()
+	if err != nil {
+	    log.Fatalf("failed to accept connection: %s\n", err)
+	    continue
+	}
 
-    fmt.Printf("Reading data from %s\n", conn)
-    fmt.Println("=====================================")
+	fmt.Printf("Reading data from %s\n", conn)
+	fmt.Println("=====================================")
 
-    linesChan := getLinesChannel(conn)
+	linesChan := getLinesChannel(conn)
 
-    for line := range linesChan {
-        fmt.Printf("read: %s\n", line)
+	for line := range linesChan {
+	    fmt.Printf("read: %s\n", line)
+	}
     }
 }
 
