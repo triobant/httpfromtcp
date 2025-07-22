@@ -1,9 +1,11 @@
 package main
 
 import (
+    "bufio"
     "fmt"
-    "net"
     "log"
+    "net"
+    "os"
 )
 
 const addr = "localhost:42069"
