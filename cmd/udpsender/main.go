@@ -8,10 +8,10 @@ import (
     "os"
 )
 
-const addr = "localhost:42069"
-
 func main() {
-    resolv, err := net.ResolveUDPAddr("udp", addr)
+    serverAddr = "localhost:42069"
+
+    udpAddr, err := net.ResolveUDPAddr("udp", serverAddr)
     if err != nil {
         log.Fatalf("error resolving address: %s\n", err.Error())
     }
