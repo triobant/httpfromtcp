@@ -9,3 +9,6 @@ type RequestLine struct {
 	RequestTarget string
 	Method        string
 }
+
+func RequestFromReader(reader io.Reader) (*Request, error) {
+}
