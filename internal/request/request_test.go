@@ -7,5 +7,4 @@ import (
 )
 
 func TestRequestLineParse(t *testing.T) {
-	assert.Equal(t, "TheTestagen", "TheTestagen")
 }
