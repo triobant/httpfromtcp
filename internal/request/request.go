@@ -1,5 +1,12 @@
 package request
 
+import (
+    "fmt"
+    "io"
+    "log"
+    "strings"
+)
+
 type Request struct {
 	RequestLine RequestLine
 }
