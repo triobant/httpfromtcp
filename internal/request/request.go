@@ -27,3 +27,6 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 
     return requestLine, nil
 }
+
+func parseRequestLine(b string) (*RequestLine, error) {
+}
