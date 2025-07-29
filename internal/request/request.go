@@ -2,6 +2,7 @@ package request
 
 import (
     "io"
+    "strings"
 )
 
 type Request struct {
