@@ -1,6 +1,7 @@
 package request
 
 import (
+    "errors"
     "io"
     "strings"
 )
@@ -30,4 +31,14 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 }
 
 func parseRequestLine(b string) (*RequestLine, error) {
+    requestSlice := strings.Split(b, " ") 
+    if len(requestSlice) != 3 {
+        return nil, errors.New("request-line doesn't contain three elements")
+    }
+
+    RequestLine.Method = requestSlice[0]
+    RequestLine.RequestTarget = requestSlice[1]
+    RequestLine.HttpVersion = requestSlice[2]
+
+    return RequestLine, nil
 }
