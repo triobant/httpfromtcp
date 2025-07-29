@@ -1,10 +1,7 @@
 package request
 
 import (
-    "fmt"
     "io"
-    "log"
-    "strings"
 )
 
 type Request struct {
@@ -18,4 +15,15 @@ type RequestLine struct {
 }
 
 func RequestFromReader(reader io.Reader) (*Request, error) {
+    b, err := io.ReadAll(reader)
+    if err != nil {
+        return nil, err
+    }
+
+    requestLine, err := parseRequestLine(b)
+    if err != nil {
+        return nil, err
+    }
+
+    return requestLine, nil
 }
