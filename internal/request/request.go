@@ -1,7 +1,8 @@
 package request
 
 import (
-    "errors"
+    "bytes"
+    "fmt"
     "io"
     "strings"
 )
