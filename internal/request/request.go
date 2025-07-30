@@ -34,19 +34,50 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 }
 
 func parseRequestLine(data []byte) (*RequestLine, error) {
-    requestLineSlice := strings.Split(b, "\r\n")
-    requestSlice := strings.Split(requestLineSlice[0], " ") 
-    if len(requestSlice) != 3 {
-        return nil, errors.New("request-line doesn't contain three elements")
+    idx := bytes.Index(data, []byte(crlf))
+    if idx == -1 {
+        return nil, fmt.Errorf("could not find CRLF in request-line")
     }
-
-    var rl RequestLine
-    rl.Method = requestSlice[0]
-    rl.RequestTarget = requestSlice[1]
-    rl.HttpVersion = strings.Split(requestSlice[2], "/")[1]
-
-    return &rl, nil
+    requestLineText := string(data[:idx])
+    requestLine, err := requestLineFromString(requestLineText)
+    if err != nil {
+        return nil, err
+    }
+    return requestLine, nil
 }
 
 func requestLineFromString(str string) (*RequestLine, error) {
+    parts := strings.Split(str, " ") 
+    if len(parts) != 3 {
+        return nil, fmt.Errorf("poorly formatted request-line: %s", str)
+    }
+
+    method := parts[0]
+    for _, c := range method {
+        if c < 'A' || c > 'Z' {
+	    return nil, fmt.Errorf("invalid method: %s", method)
+	}
+    }
+
+    requestTarget := parts[1]
+
+    versionParts := strings.Split(parts[2], "/")
+    if len(versionParts) != 2 {
+        return nil, fmt.Errorf("malformed start-line: %s", str)
+    }
+
+    httpPart := versionParts[0]
+    if httpPart != "HTTP" {
+        return nil, fmt.Errorf("unrecognized HTTP-version: %s", httpPart)
+    }
+    version := versionParts[1]
+    if version != "1.1" {
+        return nil, fmt.Errorf("unrecognized HTTP-version: %s", version)
+    }
+
+    return &RequestLine{
+        Method:		method,
+	RequestTarget:  requestTarget,
+	HttpVersion:	versionParts[1],
+    }, nil
 }
