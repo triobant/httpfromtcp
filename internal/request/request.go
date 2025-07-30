@@ -22,23 +22,28 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
         return nil, err
     }
 
-    requestLine, err := parseRequestLine(b)
+    requestLine, err := parseRequestLine(string(b))
     if err != nil {
         return nil, err
     }
 
-    return requestLine, nil
+    var req Request
+    req.RequestLine = *requestLine
+
+    return &req, nil
 }
 
 func parseRequestLine(b string) (*RequestLine, error) {
-    requestSlice := strings.Split(b, " ") 
+    requestLineSlice := strings.Split(b, "\r\n")
+    requestSlice := strings.Split(requestLineSlice[0], " ") 
     if len(requestSlice) != 3 {
         return nil, errors.New("request-line doesn't contain three elements")
     }
 
-    RequestLine.Method = requestSlice[0]
-    RequestLine.RequestTarget = requestSlice[1]
-    RequestLine.HttpVersion = requestSlice[2]
+    var rl RequestLine
+    rl.Method = requestSlice[0]
+    rl.RequestTarget = requestSlice[1]
+    rl.HttpVersion = strings.Split(requestSlice[2], "/")[1]
 
-    return RequestLine, nil
+    return &rl, nil
 }
