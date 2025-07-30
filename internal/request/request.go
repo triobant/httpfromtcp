@@ -17,21 +17,20 @@ type RequestLine struct {
 	Method        string
 }
 
+const crlf = "\r\n"
+
 func RequestFromReader(reader io.Reader) (*Request, error) {
-    b, err := io.ReadAll(reader)
+    rawBytes, err := io.ReadAll(reader)
     if err != nil {
         return nil, err
     }
-
-    requestLine, err := parseRequestLine(string(b))
+    requestLine, err := parseRequestLine(rawBytes)
     if err != nil {
         return nil, err
     }
-
-    var req Request
-    req.RequestLine = *requestLine
-
-    return &req, nil
+    return &Request{
+        RequestLine: *requestLine,
+    }, nil
 }
 
 func parseRequestLine(b string) (*RequestLine, error) {
