@@ -33,7 +33,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     }, nil
 }
 
-func parseRequestLine(b string) (*RequestLine, error) {
+func parseRequestLine(data []byte) (*RequestLine, error) {
     requestLineSlice := strings.Split(b, "\r\n")
     requestSlice := strings.Split(requestLineSlice[0], " ") 
     if len(requestSlice) != 3 {
@@ -46,4 +46,7 @@ func parseRequestLine(b string) (*RequestLine, error) {
     rl.HttpVersion = strings.Split(requestSlice[2], "/")[1]
 
     return &rl, nil
+}
+
+func requestLineFromString(str string) (*RequestLine, error) {
 }
