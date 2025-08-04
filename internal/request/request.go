@@ -17,6 +17,12 @@ type RequestLine struct {
 	Method        string
 }
 
+const (
+    _ int = iota
+    initialized
+    done
+)
+
 const crlf = "\r\n"
 
 func RequestFromReader(reader io.Reader) (*Request, error) {
