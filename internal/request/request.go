@@ -90,3 +90,6 @@ func requestLineFromString(str string) (*RequestLine, error) {
 	HttpVersion:	versionParts[1],
     }, nil
 }
+
+func (r *Request) parse(data []byte) (int, error) {
+}
