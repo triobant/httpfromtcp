@@ -39,20 +39,18 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     }, nil
 }
 
-func parseRequestLine(data []byte) (*RequestLine, error) {
-    if bytes.Contains(data, []byte(crlf)) {
+func parseRequestLine(data []byte) (int, error) {
+    if !bytes.Contains(data, []byte(crlf)) {
         return 0, nil
     }
     idx := bytes.Index(data, []byte(crlf))
-    if idx == -1 {
-        return nil, fmt.Errorf("could not find CRLF in request-line")
-    }
     requestLineText := string(data[:idx])
     requestLine, err := requestLineFromString(requestLineText)
     if err != nil {
         return nil, err
     }
-    return requestLine, nil
+    numBytes := len(crlf) + len(data[:idx])
+    return numBytes, nil
 }
 
 func requestLineFromString(str string) (*RequestLine, error) {
