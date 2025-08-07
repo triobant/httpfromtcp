@@ -9,6 +9,7 @@ import (
 
 type Request struct {
 	RequestLine RequestLine
+	State	      int
 }
 
 type RequestLine struct {
@@ -90,4 +91,14 @@ func requestLineFromString(str string) (*RequestLine, error) {
 }
 
 func (r *Request) parse(data []byte) (int, error) {
+    if r.State != 1 {
+        return nil, fmt.Errorf("State isn't initialized: %s", r.State)
+    }
+    parsedBytes, err := r.parseRequestLine(data)
+    if err != nil {
+        return nil, fmt.Errorf("State isn't initialized: %s", err)
+    }
+    if parsedBytes == 0 {
+        return 0, nil
+    }
 }
