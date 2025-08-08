@@ -27,7 +27,7 @@ const (
 const crlf = "\r\n"
 
 func RequestFromReader(reader io.Reader) (*Request, error) {
-    rawBytes, err := io.ReadAll(reader)
+    buf := make([]byte, 8, 8)
     if err != nil {
         return nil, err
     }
