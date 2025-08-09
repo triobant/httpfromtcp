@@ -28,9 +28,8 @@ const crlf = "\r\n"
 
 func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, 8, 8)
-    if err != nil {
-        return nil, err
-    }
+    readToIndex := 0
+    r := Request{State: initialized}
     requestLine, err := parseRequestLine(rawBytes)
     if err != nil {
         return nil, err
@@ -92,7 +91,7 @@ func requestLineFromString(str string) (*RequestLine, error) {
 
 func (r *Request) parse(data []byte) (int, error) {
     switch r.State {
-        case 1:
+        case initialized:
 	    parsedBytes, err := r.parseRequestLine(data)
             if err != nil {
                 return nil, fmt.Errorf("State isn't initialized: %s", err)
@@ -101,7 +100,7 @@ func (r *Request) parse(data []byte) (int, error) {
 	        return 0, nil
 	    }
 	    r.State = done
-	case 2:
+	case done:
 	    return nil, fmt.Errorf("error: trying to read data in a done state: %s", err)
 	default:
 	    return nil, fmt.Errorf("error: unknown state: %s", err)
