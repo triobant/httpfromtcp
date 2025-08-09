@@ -91,14 +91,19 @@ func requestLineFromString(str string) (*RequestLine, error) {
 }
 
 func (r *Request) parse(data []byte) (int, error) {
-    if r.State != 1 {
-        return nil, fmt.Errorf("State isn't initialized: %s", r.State)
-    }
-    parsedBytes, err := r.parseRequestLine(data)
-    if err != nil {
-        return nil, fmt.Errorf("State isn't initialized: %s", err)
-    }
-    if parsedBytes == 0 {
-        return 0, nil
+    switch r.State {
+        case 1:
+	    parsedBytes, err := r.parseRequestLine(data)
+            if err != nil {
+                return nil, fmt.Errorf("State isn't initialized: %s", err)
+            }
+	    if parsedBytes == 0 {
+	        return 0, nil
+	    }
+	    r.State = done
+	case 2:
+	    return nil, fmt.Errorf("error: trying to read data in a done state: %s", err)
+	default:
+	    return nil, fmt.Errorf("error: unknown state: %s", err)
     }
 }
