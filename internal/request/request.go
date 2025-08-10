@@ -30,13 +30,25 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, 8, 8)
     readToIndex := 0
     r := Request{State: initialized}
+    for {
+	n, err := reader.Read(buf)
+	if err == io.EOF {
+	    break
+	}
+	if err != nil {
+	    return nil, fmt.Errorf("error reading from reader: %w", err)
+	}
+	readtToIndex += n
+        parsedChunk, err := parse(n)
+	if err != nil {
+	    return nil, fmt.Errorf("couldn't parse", err)
+	}
+    }
     requestLine, err := parseRequestLine(rawBytes)
     if err != nil {
         return nil, err
     }
-    return &Request{
-        RequestLine: *requestLine,
-    }, nil
+    return &r, nil
 }
 
 func parseRequestLine(data []byte) (int, error) {
