@@ -38,7 +38,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 	if err != nil {
 	    return nil, fmt.Errorf("error reading from reader: %w", err)
 	}
-	readtToIndex += n
+	readToIndex += n
         parsedChunk, err := parse(n)
 	if err != nil {
 	    return nil, fmt.Errorf("couldn't parse", err)
