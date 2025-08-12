@@ -9,7 +9,7 @@ import (
 
 type Request struct {
 	RequestLine RequestLine
-	State	      int
+	state	    requestState
 }
 
 type RequestLine struct {
@@ -18,10 +18,11 @@ type RequestLine struct {
 	Method        string
 }
 
+type requestState int
+
 const (
-    _ int = iota
-    initialized
-    done
+    requestStateInitialized requestState = iota
+    requestStateDone
 )
 
 const crlf = "\r\n"
@@ -29,7 +30,7 @@ const crlf = "\r\n"
 func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, 8, 8)
     readToIndex := 0
-    r := Request{State: initialized}
+    r := Request{state: requestStateInitialized}
     for {
 	n, err := reader.Read(buf)
 	if err == io.EOF {
@@ -39,7 +40,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 	    return nil, fmt.Errorf("error reading from reader: %w", err)
 	}
 	readToIndex += n
-        parsedChunk, err := parse(n)
+	parsedChunk, err := r.parse(buf[:readToIndex])
 	if err != nil {
 	    return nil, fmt.Errorf("couldn't parse", err)
 	}
@@ -102,19 +103,19 @@ func requestLineFromString(str string) (*RequestLine, error) {
 }
 
 func (r *Request) parse(data []byte) (int, error) {
-    switch r.State {
-        case initialized:
-	    parsedBytes, err := r.parseRequestLine(data)
+    switch r.state {
+        case requestStateInitialized:
+	    parsedBytes, err := parseRequestLine(data)
             if err != nil {
-                return nil, fmt.Errorf("State isn't initialized: %s", err)
+	        return 0, err
             }
 	    if parsedBytes == 0 {
 	        return 0, nil
 	    }
-	    r.State = done
-	case done:
-	    return nil, fmt.Errorf("error: trying to read data in a done state: %s", err)
+	    r.state = requestStateDone 
+	case requestStateDone:
+	    return 0, fmt.Errorf("error: trying to read data in a done state: %v", r.state)
 	default:
-	    return nil, fmt.Errorf("error: unknown state: %s", err)
+	    return 0, fmt.Errorf("error: unknown state: %v", r.state)
     }
 }
