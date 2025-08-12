@@ -31,7 +31,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, 8, 8)
     readToIndex := 0
     r := Request{state: requestStateInitialized}
-    for {
+    for r.state < requestStateDone {
 	n, err := reader.Read(buf)
 	if err == io.EOF {
 	    break
