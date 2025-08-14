@@ -42,17 +42,22 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 	    buf = newBuf
 	}
 	numBytesRead, err := reader.Read(buf[readToIndex:])
-	if err == io.EOF {
-	    break
-	}
 	if err != nil {
-	    return nil, fmt.Errorf("error reading from reader: %w", err)
+	    if errors.Is(err, io.EOF) {
+		req.State = requestStateDone
+	        break
+	    }
+	    return nil, err
 	}
 	readToIndex += numBytesRead
+
 	numBytesParsed, err := req.parse(buf[:readToIndex])
 	if err != nil {
 	    return nil, fmt.Errorf("couldn't parse", err)
 	}
+
+	copy(buf, buf[numBytesParsed:])
+	readToIndex -= numBytesParsed
     }
     return req, nil
 }
