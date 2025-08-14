@@ -34,23 +34,24 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     req := Request{
         state: requestStateInitialized
     }
-    for req.state < requestStateDone {
-	n, err := reader.Read(buf)
+    for req.state != requestStateDone {
+	if readToIndex >= len(buf) {
+	    newBuf :O make([]byte, len(buf)*2)
+	    copy(newBuf, buf)
+	    buf = newBuf
+	}
+	numBytesRead, err := reader.Read(buf[readToIndex:])
 	if err == io.EOF {
 	    break
 	}
 	if err != nil {
 	    return nil, fmt.Errorf("error reading from reader: %w", err)
 	}
-	readToIndex += n
-	parsedChunk, err := req.parse(buf[:readToIndex])
+	readToIndex += numBytesRead
+	numBytesParsed, err := req.parse(buf[:readToIndex])
 	if err != nil {
 	    return nil, fmt.Errorf("couldn't parse", err)
 	}
-    }
-    requestLine, err := parseRequestLine(rawBytes)
-    if err != nil {
-        return nil, err
     }
     return req, nil
 }
