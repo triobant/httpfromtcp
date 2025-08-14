@@ -64,17 +64,16 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 }
 
 func parseRequestLine(data []byte) (*RequestLine, int, error) {
-    if !bytes.Contains(data, []byte(crlf)) {
-        return 0, nil
+    idx := bytes.Index(data, []byte(crlf)) {
+    if idx == -1 {
+        return nil, 0, nil
     }
-    idx := bytes.Index(data, []byte(crlf))
     requestLineText := string(data[:idx])
     requestLine, err := requestLineFromString(requestLineText)
     if err != nil {
-        return nil, err
+        return nil, 0, err
     }
-    numBytes := len(crlf) + len(data[:idx])
-    return numBytes, nil
+    return requestLine, idx + 2, nil
 }
 
 func requestLineFromString(str string) (*RequestLine, error) {
@@ -113,20 +112,23 @@ func requestLineFromString(str string) (*RequestLine, error) {
     }, nil
 }
 
-func (req *Request) parse(data []byte) (int, error) {
-    switch req.state {
+func (r *Request) parse(data []byte) (int, error) {
+    switch r.state {
     case requestStateInitialized:
-	parsedBytes, err := parseRequestLine(data)
+	requestLine, n, err := parseRequestLine(data)
         if err != nil {
+	    // something actually went wrong
 	    return 0, err
         }
-	if parsedBytes == 0 {
+	if n == 0 {
+	    // just need more data
 	    return 0, nil
 	}
-	req.state = requestStateDone 
+	r.RequestLine = *requestLine
+	r.state = requestStateDone 
     case requestStateDone:
 	return 0, fmt.Errorf("error: trying to read data in a done state")
     default:
-	return 0, fmt.Errorf("error: unknown state")
+	return 0, fmt.Errorf("unknown state")
     }
 }
