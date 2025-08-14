@@ -31,8 +31,10 @@ const bufferSize = 8
 func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, bufferSize, bufferSize)
     readToIndex := 0
-    r := Request{state: requestStateInitialized}
-    for r.state < requestStateDone {
+    req := Request{
+        state: requestStateInitialized
+    }
+    for req.state < requestStateDone {
 	n, err := reader.Read(buf)
 	if err == io.EOF {
 	    break
@@ -41,7 +43,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 	    return nil, fmt.Errorf("error reading from reader: %w", err)
 	}
 	readToIndex += n
-	parsedChunk, err := r.parse(buf[:readToIndex])
+	parsedChunk, err := req.parse(buf[:readToIndex])
 	if err != nil {
 	    return nil, fmt.Errorf("couldn't parse", err)
 	}
@@ -50,7 +52,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     if err != nil {
         return nil, err
     }
-    return &r, nil
+    return req, nil
 }
 
 func parseRequestLine(data []byte) (int, error) {
@@ -103,20 +105,20 @@ func requestLineFromString(str string) (*RequestLine, error) {
     }, nil
 }
 
-func (r *Request) parse(data []byte) (int, error) {
-    switch r.state {
-        case requestStateInitialized:
-	    parsedBytes, err := parseRequestLine(data)
-            if err != nil {
-	        return 0, err
-            }
-	    if parsedBytes == 0 {
-	        return 0, nil
-	    }
-	    r.state = requestStateDone 
-	case requestStateDone:
-	    return 0, fmt.Errorf("error: trying to read data in a done state: %v", r.state)
-	default:
-	    return 0, fmt.Errorf("error: unknown state: %v", r.state)
+func (req *Request) parse(data []byte) (int, error) {
+    switch req.state {
+    case requestStateInitialized:
+	parsedBytes, err := parseRequestLine(data)
+        if err != nil {
+	    return 0, err
+        }
+	if parsedBytes == 0 {
+	    return 0, nil
+	}
+	req.state = requestStateDone 
+    case requestStateDone:
+	return 0, fmt.Errorf("error: trying to read data in a done state")
+    default:
+	return 0, fmt.Errorf("error: unknown state")
     }
 }
