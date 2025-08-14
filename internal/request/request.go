@@ -38,14 +38,14 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     }
     for req.state != requestStateDone {
 	if readToIndex >= len(buf) {
-	    newBuf :O make([]byte, len(buf)*2)
+	    newBuf := make([]byte, len(buf)*2)
 	    copy(newBuf, buf)
 	    buf = newBuf
 	}
 	numBytesRead, err := reader.Read(buf[readToIndex:])
 	if err != nil {
 	    if errors.Is(err, io.EOF) {
-		req.State = requestStateDone
+		req.state = requestStateDone
 	        break
 	    }
 	    return nil, err
@@ -64,7 +64,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 }
 
 func parseRequestLine(data []byte) (*RequestLine, int, error) {
-    idx := bytes.Index(data, []byte(crlf)) {
+    idx := bytes.Index(data, []byte(crlf))
     if idx == -1 {
         return nil, 0, nil
     }
@@ -126,6 +126,7 @@ func (r *Request) parse(data []byte) (int, error) {
 	}
 	r.RequestLine = *requestLine
 	r.state = requestStateDone 
+	return n, nil
     case requestStateDone:
 	return 0, fmt.Errorf("error: trying to read data in a done state")
     default:
