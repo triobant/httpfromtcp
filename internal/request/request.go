@@ -10,6 +10,7 @@ import (
 
 type Request struct {
 	RequestLine RequestLine
+
 	state	    requestState
 }
 
@@ -62,7 +63,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
     return req, nil
 }
 
-func parseRequestLine(data []byte) (int, error) {
+func parseRequestLine(data []byte) (*RequestLine, int, error) {
     if !bytes.Contains(data, []byte(crlf)) {
         return 0, nil
     }
