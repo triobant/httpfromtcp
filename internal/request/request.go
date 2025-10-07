@@ -33,8 +33,8 @@ const bufferSize = 8
 func RequestFromReader(reader io.Reader) (*Request, error) {
     buf := make([]byte, bufferSize, bufferSize)
     readToIndex := 0
-    req := Request{
-        state: requestStateInitialized
+    req := &Request{
+        state: requestStateInitialized,
     }
     for req.state != requestStateDone {
 	if readToIndex >= len(buf) {
