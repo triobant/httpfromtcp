@@ -54,7 +54,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 
 	numBytesParsed, err := req.parse(buf[:readToIndex])
 	if err != nil {
-	    return nil, fmt.Errorf("couldn't parse", err)
+	    return nil, err
 	}
 
 	copy(buf, buf[numBytesParsed:])
