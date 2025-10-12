@@ -38,6 +38,7 @@ func main() {
     }
 }
 
+/**
 func getLinesChannel(f io.ReadCloser) <-chan string {
     lines := make(chan string)
     go func() {
@@ -69,3 +70,4 @@ func getLinesChannel(f io.ReadCloser) <-chan string {
 
     return lines
 }
+**/
