@@ -7,6 +7,7 @@ import (
     "log"
     "net"
     "strings"
+    "github.com/triobant/httpfromtcp/internal/request"
 )
 
 const port = ":42069"
