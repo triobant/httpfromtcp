@@ -26,5 +26,10 @@ func main() {
 	    log.Fatalf("error: %s\n", err.Error())
 	}
 	fmt.Println("Accepted connection from", conn.RemoteAddr())
+
+	req, err := request.RequestFromReader(conn)
+	if err != nil {
+	    log.Fatalf("error parsing request: %s\n", err.Error())
+	}
     }
 }
