@@ -1,13 +1,10 @@
 package main
 
 import (
-    "errors"
     "fmt"
-    "io"
     "log"
     "net"
-    "strings"
-    "github.com/triobant/httpfromtcp/internal/request"
+    "httpfromtcp/internal/request"
 )
 
 const port = ":42069"
