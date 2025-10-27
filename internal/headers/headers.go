@@ -15,16 +15,19 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
         return 0, false, nil
     }
     if idx == 0 {
-        return 2, true, nil
+        return len(crlf), true, nil
     }
 
     line := data[:idx]
+
     colonIdx := bytes.IndexByte(line, ':')
     if colonIdx == -1 {
-        return 0, false, err
+        return 0, false, fmt.Errorf("missing colon")
     }
-    if line[colonIdx-1] == ' ' {
-        return 0, false, err
+
+    rawKey := line[:colonIdx]
+    if len(rawKey) == 0 || rawKey[len(rawKey)-1] == ' ' {
+        return 0, false, fmt.Errorf("space before colon in field-name")
     }
 
     h[key] = value
