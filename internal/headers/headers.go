@@ -13,6 +13,9 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
     if idx == -1 {
         return 0, false, nil
     }
+    if idx == 0 {
+        return 2, true, nil
+    }
 
     h[key] = value
     return n, done, err
