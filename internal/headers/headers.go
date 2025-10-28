@@ -30,6 +30,10 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
         return 0, false, fmt.Errorf("space before colon in field-name")
     }
 
+    rawVal := line[colonIdx+1:]
+    key := string(bytes.TrimSpace(rawKey))
+    val := string(bytes.TrimSpace(rawVal))
+
     h[key] = value
-    return n, done, err
+    return idx + len(crlf), false, nil
 }
