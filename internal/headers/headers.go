@@ -34,6 +34,6 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
     key := string(bytes.TrimSpace(rawKey))
     val := string(bytes.TrimSpace(rawVal))
 
-    h[key] = value
+    h[key] = val
     return idx + len(crlf), false, nil
 }
