@@ -51,4 +51,13 @@ func TestHeadersParse(t *testing.T) {
     assert.Equal(t, "text/plain", headers["Content-Type"])
     assert.Equal(t, 26, n)
     assert.False(t, done)
+
+    // Test: Valid done
+    headers = NewHeaders()
+    data = []byte("\r\n\r\nHost: localhost:42069\r\n\r\n")
+    n, done, err = headers.Parse(data)
+    require.NoError(t, err)
+    require.NotNil(t, headers)
+    assert.Equal(t, 2, n)
+    assert.True(t, done)
 }
