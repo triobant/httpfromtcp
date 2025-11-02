@@ -1,7 +1,6 @@
 package headers
 
 import (
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
