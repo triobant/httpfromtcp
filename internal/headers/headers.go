@@ -9,6 +9,10 @@ const crlf = "\r\n"
 
 type Headers map[string]string
 
+func NewHeaders() Headers {
+    return make(Headers)
+}
+
 func (h Headers) Parse(data []byte) (n int, done bool, err error) {
     idx := bytes.Index(data, []byte(crlf))
     if idx == -1 {
