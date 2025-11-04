@@ -20,7 +20,7 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
         return 0, false, nil
     }
     if idx == 0 {
-        return len(crlf), true, nil
+        return 2, true, nil
     }
 
     line := data[:idx]
