@@ -3,6 +3,7 @@ package headers
 import (
     "bytes"
     "fmt"
+    "strings"
 )
 
 const crlf = "\r\n"
