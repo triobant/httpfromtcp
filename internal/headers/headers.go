@@ -36,3 +36,7 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
     h.Set(key, string(value))
     return idx + 2, false, nil
 }
+
+func (h Headers) Set(key, value string) {
+    h[key] = value
+}
