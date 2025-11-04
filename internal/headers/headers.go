@@ -23,22 +23,16 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
         return 2, true, nil
     }
 
-    line := data[:idx]
+    parts := bytes.SplitN(data[:idx], []byte(":"), 2)
+    key := string(parts[0])
 
-    colonIdx := bytes.IndexByte(line, ':')
-    if colonIdx == -1 {
-        return 0, false, fmt.Errorf("missing colon")
+    if key != strings.TrimRight(key, " ") {
+        return 0, false, fmt.Errorf("invalid header name: %s", key)
     }
 
-    rawKey := line[:colonIdx]
-    if len(rawKey) == 0 || rawKey[len(rawKey)-1] == ' ' {
-        return 0, false, fmt.Errorf("space before colon in field-name")
-    }
+    value := bytes.TrimSpace(parts[1])
+    key = strings.TrimSpace(key)
 
-    rawVal := line[colonIdx+1:]
-    key := string(bytes.TrimSpace(rawKey))
-    val := string(bytes.TrimSpace(rawVal))
-
-    h[key] = val
-    return idx + len(crlf), false, nil
+    h.Set(key, string(value))
+    return idx + 2, false, nil
 }
