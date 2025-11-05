@@ -20,12 +20,12 @@ func TestHeadersParse(t *testing.T) {
 
     // Test: Valid single header with extra whitespace
     headers = NewHeaders()
-    data = []byte("Host: localhost   :   42069\r\n\r\n")
+    data = []byte("       Host: localhost:42069                           \r\n\r\n")
     n, done, err = headers.Parse(data)
     require.NoError(t, err)
     require.NotNil(t, headers)
-    assert.Equal(t, "localhost   :   42069", headers["Host"])
-    assert.Equal(t, 29, n)
+    assert.Equal(t, "localhost:42069", headers["Host"])
+    assert.Equal(t, 57, n)
     assert.False(t, done)
 
     // Test: Valid two headers with existing headers
