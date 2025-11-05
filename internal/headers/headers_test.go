@@ -45,6 +45,7 @@ func TestHeadersParse(t *testing.T) {
     n, done, err = headers.Parse(data)
     require.NoError(t, err)
     require.NotNil(t, headers)
+    assert.Empty(t, headers)
     assert.Equal(t, 2, n)
     assert.True(t, done)
 
