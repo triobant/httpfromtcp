@@ -32,6 +32,7 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
 
     value := bytes.TrimSpace(parts[1])
     key = strings.TrimSpace(key)
+    key = strings.ToLower(key)
 
     h.Set(key, string(value))
     return idx + 2, false, nil
