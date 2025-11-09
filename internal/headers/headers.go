@@ -33,6 +33,9 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
     value := bytes.TrimSpace(parts[1])
     key = strings.TrimSpace(key)
     key = strings.ToLower(key)
+    for _, r := range key {
+	fmt.Printf("rune: %q byte: %d\n", r, len([]byte(string(r))))
+    }
 
     h.Set(key, string(value))
     return idx + 2, false, nil
