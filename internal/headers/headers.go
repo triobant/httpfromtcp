@@ -4,6 +4,7 @@ import (
     "bytes"
     "fmt"
     "strings"
+    "unicode"
 )
 
 const crlf = "\r\n"
