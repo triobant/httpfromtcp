@@ -39,6 +39,9 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
 	if unicode.IsLetter(r) {
             fmt.Printf("It is a letter: %q", r)
 	}
+	if unicode.IsDigit(r) {
+            fmt.Printf("It is a digit: %q", r)
+	}
 	fmt.Printf("No letter but...\nrune: %q byte: %d\n", r, len([]byte(string(r))))
     }
 
