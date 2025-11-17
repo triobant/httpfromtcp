@@ -44,3 +44,5 @@ func (h Headers) Set(key, value string) {
     key = strings.ToLower(key)
     h[key] = value
 }
+
+var tokenChars = []byte{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '.', '^', '_', '`', '|', '~'}
