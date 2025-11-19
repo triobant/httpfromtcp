@@ -48,4 +48,10 @@ func (h Headers) Set(key, value string) {
 var tokenChars = []byte{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '.', '^', '_', '`', '|', '~'}
 
 func validTokens(data []byte) bool {
+    for _, c := range data {
+        if !isTokenChar(c) {
+	    return false
+	}
+    }
+    return true
 }
