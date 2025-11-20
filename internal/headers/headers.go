@@ -55,3 +55,6 @@ func validTokens(data []byte) bool {
     }
     return true
 }
+
+func isTokenChar(c byte) bool {
+}
