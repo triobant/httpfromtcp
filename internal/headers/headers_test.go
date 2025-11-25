@@ -59,6 +59,16 @@ func TestHeadersParse(t *testing.T) {
     assert.Equal(t, 23, n)
     assert.False(t, done)
 
+    // Test: Same header key
+    headers = map[string]string{"set-person": "lane-loves-go, prime-loves-zig"}
+    data = []byte("Set-Person: tj-loves-ocaml\r\n\r\n")
+    n, done, err = headers.Parse(data)
+    require.NoError(t, err)
+    require.NotNil(t, headers)
+    assert.Equal(t, "lane-loves-go, prime-loves-zig, tj-loves-ocaml", headers["set-person"])
+    assert.Equal(t, 28, n)
+    assert.False(t, done)
+
     // Test: Invalid spacing header
     headers = NewHeaders()
     data = []byte("       Host : localhost:42069       \r\n\r\n")
