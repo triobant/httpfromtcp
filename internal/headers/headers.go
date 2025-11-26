@@ -42,12 +42,13 @@ func (h Headers) Parse(data []byte) (n int, done bool, err error) {
 
 func (h Headers) Set(key, value string) {
     key = strings.ToLower(key)
-    if val, ok := h[key]; ok {
-	combined := val + ", " + value
-        h[key] = combined
-    } else {
-        h[key] = value
+    val, ok := h[key]
+    if ok {
+	value = strings.Join([]string{
+	    val, value,
+	}, ", ")
     }
+    h[key] = value
 }
 
 var tokenChars = []byte{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '.', '^', '_', '`', '|', '~'}
