@@ -55,7 +55,9 @@ var tokenChars = []byte{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '.', '^', 
 
 func validTokens(data []byte) bool {
     for _, c := range data {
-        if !isTokenChar(c) {
+        if c >= 'A' && c <= 'Z' ||
+	    c >= 'a' && c <= 'z' ||
+	    c >= '0' && c <= '9' {
 	    return false
 	}
     }
