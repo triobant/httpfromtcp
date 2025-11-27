@@ -61,13 +61,3 @@ func validTokens(data []byte) bool {
     }
     return true
 }
-
-func isTokenChar(c byte) bool {
-    if c >= 'A'  && c <= 'Z' ||
-        c >= 'a' && c <= 'z' ||
-	c >= '0' && c <= '9' {
-	return true
-    }
-
-    return slices.Contains(tokenChars, c)
-}
