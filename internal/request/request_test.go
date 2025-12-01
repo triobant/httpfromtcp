@@ -110,6 +110,16 @@ func TestRequestLineParse(t *testing.T) {
     require.NoError(t, err)
     require.NotNil(t, r)
     assert.Equal(t, "localhost:42069", r.Headers["host"])
+
+    // Test: Case Insensitive Headers
+    reader := &chunkReader{
+	data:            "GET / HTTP/1.1\r\nHoSt: localhost:42069\r\n\r\n",
+	numBytesPerRead: 3,
+    }
+    r, err := RequestFromReader(reader)
+    require.NoError(t, err)
+    require.NotNil(t, r)
+    assert.Equal(t, "localhost:42069", r.Headers["host"])
 }
 
 type chunkReader struct {
