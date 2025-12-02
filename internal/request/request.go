@@ -25,6 +25,7 @@ type requestState int
 const (
     requestStateInitialized requestState = iota
     requestStateDone
+    requestStateParsingHeaders
 )
 
 const crlf = "\r\n"
