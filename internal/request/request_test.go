@@ -120,6 +120,17 @@ func TestRequestLineParse(t *testing.T) {
     require.NoError(t, err)
     require.NotNil(t, r)
     assert.Equal(t, "localhost:42069", r.Headers["host"])
+
+    // Test: Missing End of Headers
+    reader := &chunkReader{
+	data:            "GET / HTTP/1.1\r\nHost: localhost:42069",
+	numBytesPerRead: 3,
+    }
+    r, err := RequestFromReader(reader)
+    require.NoError(t, err)
+    require.NotNil(t, r)
+    assert.Equal(t, "localhost:42069", r.Headers["host"])
+}
 }
 
 type chunkReader struct {
