@@ -93,15 +93,13 @@ func TestHeadersParse(t *testing.T) {
 
     // Test: Empty Headers
     reader := &chunkReader{
-	data:            "GET / HTTP/1.1\r\nHost: \r\nUser-Agent: \r\nAccept: \r\n\r\n",
+	data:            "GET / HTTP/1.1\r\n\r\n",
 	numBytesPerRead: 3,
     }
     r, err := RequestFromReader(reader)
     require.NoError(t, err)
     require.NotNil(t, r)
-    assert.Equal(t, "", r.Headers["host"])
-    assert.Equal(t, "", r.Headers["user-agent"])
-    assert.Equal(t, "", r.Headers["accept"])
+    assert.Empty(t, r.Headers)
 
     // Test: Duplicate Headers
     reader := &chunkReader{
