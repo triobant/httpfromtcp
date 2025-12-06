@@ -103,13 +103,13 @@ func TestHeadersParse(t *testing.T) {
 
     // Test: Duplicate Headers
     reader := &chunkReader{
-	data:            "GET / HTTP/1.1\r\nHost: localhost:42069\r\nHost: localhost:42069\r\n\r\n",
+	data:            "GET / HTTP/1.1\r\nHost: localhost:42069\r\nHost: duplicate:42069\r\n\r\n",
 	numBytesPerRead: 3,
     }
     r, err := RequestFromReader(reader)
     require.NoError(t, err)
     require.NotNil(t, r)
-    assert.Equal(t, "localhost:42069", r.Headers["host"])
+    assert.Equal(t, "localhost:42069, duplicate:42069", r.Headers["host"])
 
     // Test: Case Insensitive Headers
     reader := &chunkReader{
