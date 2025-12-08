@@ -6,6 +6,7 @@ import (
     "fmt"
     "io"
     "strings"
+    "github.com/triobant/httpfromtcp/internal/headers"
 )
 
 type Request struct {
