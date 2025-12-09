@@ -11,6 +11,7 @@ import (
 
 type Request struct {
 	RequestLine RequestLine
+	Headers	    headers.Headers
 
 	state	    requestState
 }
